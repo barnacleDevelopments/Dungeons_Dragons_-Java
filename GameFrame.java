@@ -16,12 +16,13 @@ public class GameFrame extends JFrame {
     }
 
     public void createPlayer(PlayerSelections selections) {
-        String playerName = selections.playerName;
-        String playerType = selections.playerType;
-        int playerAgility = selections.playerAgility;
-        int playerAttack = selections.playerAttack;
-        int playerHitPoints = selections.playerHitPoints;
-        int playerDefence = selections.playerDefense;
+        String playerName = selections.getPlayerName();
+        String playerType = selections.getPlayerType();
+        String playerWeapon = selections.getPlayerWeaponType();
+        int playerAgility = selections.getPlayerAgility();
+        int playerAttack = selections.getPlayerAttack();
+        int playerHitPoints = selections.getPlayerHitPoints();
+        int playerDefence = selections.getPlayerDefense();
 
         switch (playerType) {
         case "Warrior":
@@ -37,7 +38,24 @@ public class GameFrame extends JFrame {
             setPlayer(new Warrior(playerName, playerAgility, playerAttack, playerHitPoints, playerDefence));
             break;
         }
-        System.out.println(player.getAgility());
+
+        switch (playerWeapon) {
+        case "Sword":
+            player.setWeapon(new Sword());
+            break;
+        case "Dagger":
+            player.setWeapon(new Dagger());
+            break;
+        case "Wand":
+            player.setWeapon(new Wand());
+            break;
+        default:
+            player.setWeapon(new Sword());
+            break;
+
+        }
+
+        player.printCharacterStats();
     }
 
     public Player getPlayer() {

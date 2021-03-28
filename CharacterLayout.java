@@ -1,14 +1,17 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 
 public class CharacterLayout extends JPanel {
     PlayerSelections selections = new PlayerSelections();
 
-    public CharacterLayout(GameFrame game) {
-        this.setLayout(new BorderLayout());
+    public CharacterLayout(GameFrame game, JPanel mainFrame) {
+        this.setLayout(new BorderLayout(15, 15));
 
         // Page header
         JLabel heading = new JLabel("Character Creation", JLabel.CENTER);
@@ -28,8 +31,8 @@ public class CharacterLayout extends JPanel {
 
         // Character modfication panels
         JPanel modificationPanelGroup = new JPanel();
-        modificationPanelGroup.setLayout(new GridLayout(2, 2));
-
+        modificationPanelGroup.setLayout(new GridLayout(2, 2, 15, 15));
+        modificationPanelGroup.setBackground(Color.black);
         modificationPanelGroup.add(getCharacterTypePanel());
         modificationPanelGroup.add(getCharacterStatPanel());
         modificationPanelGroup.add(getWeaponTypePanel());
@@ -41,9 +44,10 @@ public class CharacterLayout extends JPanel {
         toBattleButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                selections.setPlayerName(playerNameInput.getText());
                 game.createPlayer(selections);
+                mainFrame.add(new BattleLayout(game), "battle");
                 game.setActiveScreen("battle");
-
             }
         });
 
@@ -60,26 +64,28 @@ public class CharacterLayout extends JPanel {
         typeContainerPanel.setOpaque(true);
 
         // create caracter type picker lable
-        JLabel panelLabel = new JLabel("Character Type", JLabel.CENTER);
+        JLabel panelLabel = new JLabel("Character Type");
         panelLabel.setForeground(Color.white);
         panelLabel.setFont(new Font("Serif", Font.BOLD, 30));
 
         // // Character Image pannel
-        // JPanel imJPanel = new JPanel();
-        // imJPanel.setBackground(Color.BLACK);
 
-        // JLabel characterImage = new JLabel("", JLabel.CENTER);
-        // characterImage.setIcon(new ImageIcon("images/warrior.jpg"));
+        // Create character Type radio Pannel
+        JPanel typeRadioPanel = new JPanel();
+        typeRadioPanel.setOpaque(true);
+        typeRadioPanel.setBackground(Color.black);
+        typeRadioPanel.setForeground(Color.black);
+        typeRadioPanel.setLayout(new BoxLayout(typeRadioPanel, BoxLayout.Y_AXIS));
 
-        // imJPanel.add(characterImage);
+        // create image JLabel
+        JLabel characterIconLabel = new JLabel();
 
-        // Create character Type Picker Pannel
+        // create type picker panel
         JPanel typePickerPanel = new JPanel();
-        typePickerPanel.setOpaque(true);
-        typePickerPanel.setBackground(Color.black);
-        typePickerPanel.setForeground(Color.black);
+        typePickerPanel.setLayout(new BoxLayout(typePickerPanel, BoxLayout.X_AXIS));
+        typePickerPanel.add(typeRadioPanel);
+        typePickerPanel.add(characterIconLabel);
 
-        typePickerPanel.setLayout(new BoxLayout(typePickerPanel, BoxLayout.Y_AXIS));
         // create radio buttons for each type
         JRadioButton option1 = new JRadioButton("Warrior");
         JRadioButton option2 = new JRadioButton("Cleric");
@@ -90,18 +96,21 @@ public class CharacterLayout extends JPanel {
         option1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                characterIconLabel.setIcon(new RpgImageIcon("./images/warrior.jpg"));
                 selections.setPlayerType(option1.getText());
             }
         });
         option2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                characterIconLabel.setIcon(new RpgImageIcon("./images/cleric.jfif"));
                 selections.setPlayerType(option2.getText());
             }
         });
         option3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                characterIconLabel.setIcon(new RpgImageIcon("./images/mage.jfif"));
                 selections.setPlayerType(option3.getText());
             }
         });
@@ -149,25 +158,21 @@ public class CharacterLayout extends JPanel {
         statLabel1.setFont(new Font("Serif", Font.BOLD, 20));
         statLabel1.setForeground(Color.white);
         JTextField stat1 = new JTextField();
-        stat1.setText("75");
 
         JLabel statLabel2 = new JLabel("Defence");
         statLabel2.setFont(new Font("Serif", Font.BOLD, 20));
         statLabel2.setForeground(Color.white);
         JTextField stat2 = new JTextField();
-        stat2.setText("43");
 
         JLabel statLabel3 = new JLabel("Hit Points");
         statLabel3.setFont(new Font("Serif", Font.BOLD, 20));
         statLabel3.setForeground(Color.white);
         JTextField stat3 = new JTextField();
-        stat3.setText("87");
 
         JLabel statLabel4 = new JLabel("Base Attack");
         statLabel4.setFont(new Font("Serif", Font.BOLD, 20));
         statLabel4.setForeground(Color.white);
         JTextField stat4 = new JTextField();
-        stat4.setText("23");
 
         // add state labels and text inputs to character stats panel
         statPanel.add(statLabel1);
@@ -184,14 +189,14 @@ public class CharacterLayout extends JPanel {
         roleButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // role random stats
+                // role and set new random stats
+                randomizeStats(stat1, stat2, stat3, stat4);
 
                 // set stats to selection class
                 selections.setPlayerAgility(Integer.parseInt(stat1.getText()));
                 selections.setPlayerDefense(Integer.parseInt(stat2.getText()));
                 selections.setPlayerHitPoints(Integer.parseInt(stat3.getText()));
                 selections.setPlayerAttack(Integer.parseInt(stat4.getText()));
-
             }
         });
 
@@ -199,8 +204,16 @@ public class CharacterLayout extends JPanel {
         statContainerPanel.add(panelLabel);
         statContainerPanel.add(statPanel);
         statContainerPanel.add(roleButton);
-
         return statContainerPanel;
+    }
+
+    private void randomizeStats(JTextField stat1, JTextField stat2, JTextField stat3, JTextField stat4) {
+        StatGenerator sg = new StatGenerator();
+        stat1.setText(String.valueOf(sg.getRandomStat()));
+        stat2.setText(String.valueOf(sg.getRandomStat()));
+        stat3.setText(String.valueOf(sg.getRandomStat()));
+        stat4.setText(String.valueOf(sg.getRandomStat()));
+
     }
 
     private JPanel getWeaponTypePanel() {
@@ -209,31 +222,34 @@ public class CharacterLayout extends JPanel {
         weaponContainerPanel.setBackground(Color.black);
 
         // state panel label
-        JLabel panelLabel = new JLabel("Character Weapon", JLabel.LEFT);
+        JLabel panelLabel = new JLabel("Character Weapon");
         panelLabel.setForeground(Color.white);
         panelLabel.setFont(new Font("Serif", Font.BOLD, 30));
 
         // Character Weapon Panel
-        JPanel weaponPickerPanel = new JPanel();
-        weaponPickerPanel.setLayout(new BoxLayout(weaponPickerPanel, BoxLayout.Y_AXIS));
-
+        JPanel weaponRadioPanel = new JPanel();
+        // Character weapon image label
+        JLabel weaponImage = new JLabel();
+        weaponRadioPanel.setLayout(new BoxLayout(weaponRadioPanel, BoxLayout.Y_AXIS));
         JRadioButton wepOption1 = new JRadioButton("Sword");
         JRadioButton wepOption2 = new JRadioButton("Dagger");
         JRadioButton wepOption3 = new JRadioButton("Wand");
 
-        weaponPickerPanel.add(wepOption1);
-        weaponPickerPanel.add(wepOption2);
-        weaponPickerPanel.add(wepOption3);
+        JPanel weaponPickerPanel = new JPanel();
+        weaponPickerPanel.add(weaponRadioPanel);
+        weaponPickerPanel.add(weaponImage);
+
         wepOption1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                weaponImage.setIcon(new RpgImageIcon("./images/weapons/sword.png"));
                 selections.setPlayerWeaponType(wepOption1.getText());
-
             }
         });
         wepOption2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                weaponImage.setIcon(new RpgImageIcon("./images/weapons/dagger.jpg"));
                 selections.setPlayerWeaponType(wepOption2.getText());
 
             }
@@ -241,40 +257,37 @@ public class CharacterLayout extends JPanel {
         wepOption3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                weaponImage.setIcon(new RpgImageIcon("./images/weapons/wand.jpg"));
                 selections.setPlayerWeaponType(wepOption3.getText());
 
             }
         });
 
-        // Character weapon image pannel
-        // JPanel imJPanel = new JPanel();
-        // imJPanel.setBackground(Color.BLACK);
-        // JLabel characterImage = new JLabel("", JLabel.CENTER);
-        // Image weaponImage = new Image();
-        // weaponImage.s;
-        // characterImage.setIcon(weaponImage);
-        // imJPanel.add(characterImage);
+        weaponRadioPanel.add(wepOption1);
+        weaponRadioPanel.add(wepOption2);
+        weaponRadioPanel.add(wepOption3);
+        ButtonGroup weaponButtonGroup = new ButtonGroup();
+        weaponButtonGroup.add(wepOption1);
+        weaponButtonGroup.add(wepOption2);
+        weaponButtonGroup.add(wepOption3);
 
         // Character Description Panel
         JTextArea description = new JTextArea();
 
         weaponContainerPanel.add(panelLabel);
-
         weaponContainerPanel.add(weaponPickerPanel);
-        // weaponContainerPanel.add(imJPanel);
-
         weaponContainerPanel.add(description);
+
         return weaponContainerPanel;
     }
 
     private JPanel getWeaponStatPanel() {
         JPanel weaponStatContainerPanel = new JPanel();
-        weaponStatContainerPanel.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
+        weaponStatContainerPanel.setLayout(new BoxLayout(weaponStatContainerPanel, BoxLayout.Y_AXIS));
         weaponStatContainerPanel.setBackground(Color.black);
 
         // state panel label
-        JLabel panelLabel = new JLabel("Character Weapon Stats", JLabel.LEFT);
+        JLabel panelLabel = new JLabel("Character Weapon Stats");
         panelLabel.setForeground(Color.white);
         panelLabel.setFont(new Font("Serif", Font.BOLD, 30));
 
@@ -302,16 +315,9 @@ public class CharacterLayout extends JPanel {
         weaponStatPanel.add(stat2);
 
         // add child pannels to main panel
-        gbc.insets = new Insets(15, 15, 15, 15);
-        gbc.gridy = 0;
-        gbc.gridx = 0;
-        gbc.gridwidth = 1;
-        weaponStatContainerPanel.add(panelLabel, gbc);
-        gbc.gridy = 1;
-        gbc.gridx = 0;
-        gbc.gridwidth = 2;
-        gbc.gridheight = 2;
-        weaponStatContainerPanel.add(weaponStatPanel, gbc);
+
+        weaponStatContainerPanel.add(panelLabel);
+        weaponStatContainerPanel.add(weaponStatPanel);
 
         return weaponStatContainerPanel;
     }

@@ -1,8 +1,7 @@
-import javax.swing.JFrame;
+
 import javax.swing.JPanel;
-import javax.swing.*;
+
 import java.awt.*;
-import java.io.File;
 
 public class Main {
     public static void main(String[] args) {
@@ -11,10 +10,10 @@ public class Main {
         // Display the start screen
         JPanel mainPane = (JPanel) game.getContentPane();
         mainPane.setLayout(new CardLayout());
+        game.setBackground(Color.black);
 
         mainPane.add(new IntroLayout(game), "intro");
-        mainPane.add(new CharacterLayout(game), "character");
-        mainPane.add(new BattleLayout(game), "battle");
+        mainPane.add(new CharacterLayout(game, mainPane), "character");
 
         game.setVisible(true);
 
@@ -22,5 +21,4 @@ public class Main {
         game.setActiveScreen("intro");
 
     }
-
 }

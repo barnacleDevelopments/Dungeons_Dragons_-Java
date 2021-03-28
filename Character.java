@@ -55,14 +55,6 @@ public abstract class Character {
         this.attack = attack;
     }
 
-    public void printCharacterStats() {
-        System.out.println("Current Player: \n");
-        System.out.println("name: " + getName());
-        System.out.println("agility: " + getAgility());
-        System.out.println("attack: " + getAttack());
-        System.out.println("hit points: " + getHitPoints());
-        System.out.println("defence: " + getDefense());
-
-    }
+    abstract void printCharacterStats();
 
 }
