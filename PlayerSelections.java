@@ -1,7 +1,7 @@
 public class PlayerSelections {
     String playerName;
     String playerType;
-    String playerWeaponType;
+    Weapon playerWeapon;
     int playerAgility;
     int playerDefense;
     int playerAttack;
@@ -55,12 +55,12 @@ public class PlayerSelections {
         this.playerName = playerName;
     }
 
-    public String getPlayerWeaponType() {
-        return this.playerWeaponType;
+    public Weapon getPlayerWeapon() {
+        return this.playerWeapon;
     }
 
-    public void setPlayerWeaponType(String playerWeaponType) {
-        this.playerWeaponType = playerWeaponType;
+    public void setPlayerWeapon(Weapon playerWeapon) {
+        this.playerWeapon = playerWeapon;
     }
 
 }

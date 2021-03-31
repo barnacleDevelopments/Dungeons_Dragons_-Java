@@ -5,7 +5,7 @@ public class Cleric extends Player {
 
     public Cleric(String playerName, int playerAgility, int playerAttack, int playerHitPoints, int playerDefence) {
         super(playerName, playerAgility, playerAttack, playerHitPoints, playerDefence);
-        this.imageIcon = new RpgImageIcon("./images/cleric.jfif");
+        this.imageIcon = new RpgImageIcon("./images/player_types/cleric.jfif");
     }
 
     public ImageIcon getImageIcon() {

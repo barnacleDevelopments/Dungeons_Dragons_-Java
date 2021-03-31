@@ -1,3 +1,5 @@
+import javax.swing.ImageIcon;
+
 public abstract class Weapon {
     int attackMod;
     int weight;
@@ -18,4 +20,5 @@ public abstract class Weapon {
         this.weight = weight;
     }
 
+    public abstract ImageIcon getWeaponImage();
 }

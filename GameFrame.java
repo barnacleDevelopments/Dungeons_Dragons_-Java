@@ -6,19 +6,29 @@ public class GameFrame extends JFrame {
     Player player;
 
     public GameFrame() {
-        this.setBounds(0, 0, 1300, 1000);
+        this.setBounds(0, 0, 1500, 1000);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
+    /**
+     * 
+     * @param screenName
+     * @description sets the current active screen.
+     */
     public void setActiveScreen(String screenName) {
         CardLayout layout = (CardLayout) this.getContentPane().getLayout();
         layout.show(this.getContentPane(), screenName);
     }
 
+    /**
+     * 
+     * @param selections
+     * @description creates a new player class based on selection class paramers.
+     */
     public void createPlayer(PlayerSelections selections) {
         String playerName = selections.getPlayerName();
         String playerType = selections.getPlayerType();
-        String playerWeapon = selections.getPlayerWeaponType();
+        Weapon playerWeapon = selections.getPlayerWeapon();
         int playerAgility = selections.getPlayerAgility();
         int playerAttack = selections.getPlayerAttack();
         int playerHitPoints = selections.getPlayerHitPoints();
@@ -38,22 +48,7 @@ public class GameFrame extends JFrame {
             setPlayer(new Warrior(playerName, playerAgility, playerAttack, playerHitPoints, playerDefence));
             break;
         }
-
-        switch (playerWeapon) {
-        case "Sword":
-            player.setWeapon(new Sword());
-            break;
-        case "Dagger":
-            player.setWeapon(new Dagger());
-            break;
-        case "Wand":
-            player.setWeapon(new Wand());
-            break;
-        default:
-            player.setWeapon(new Sword());
-            break;
-
-        }
+        player.setWeapon(playerWeapon);
 
         player.printCharacterStats();
     }

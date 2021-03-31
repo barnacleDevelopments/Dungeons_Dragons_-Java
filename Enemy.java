@@ -1,8 +1,12 @@
-public class Enemy extends Character {
+import javax.swing.ImageIcon;
+
+public abstract class Enemy extends Character {
 
     public Enemy(String enemyName, int enemyAgility, int enemyDefense, int enemyAttack, int enemyHitPoints) {
         super(enemyName, enemyAgility, enemyDefense, enemyAttack, enemyHitPoints);
     }
+
+    abstract ImageIcon getImageIcon();
 
     public void printCharacterStats() {
         System.out.println("Current Enemy: \n");

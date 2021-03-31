@@ -5,7 +5,7 @@ public class Warrior extends Player {
 
     public Warrior(String playerName, int playerAgility, int playerAttack, int playerHitPoints, int playerDefence) {
         super(playerName, playerAgility, playerAttack, playerHitPoints, playerDefence);
-        this.imageIcon = new RpgImageIcon("./images/warrior.jpg");
+        this.imageIcon = new RpgImageIcon("./images/player_types/warrior.jpg");
     }
 
     public ImageIcon getImageIcon() {
